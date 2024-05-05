@@ -1,17 +1,19 @@
 import express, { json } from 'express'
 import { createUserRouter } from './routes/users.js'
 import { corsMiddleware } from './middlewares/cors.js'
+import { UserModel } from './models/user.js'  // Importar UserModel directamente
 import 'dotenv/config'
 
-export const createApp = ( { userModel} ) => {
-    const app = express()
-    app.use(json())
-    app.use(corsMiddleware())
-    app.disable('x-powered-by')
+const app = express()
+app.use(json())
+app.use(corsMiddleware())
+app.disable('x-powered-by')
 
-    app.use('/users', createUserRouter({ userModel }))
+// Configurar la ruta /users con el modelo importado
+app.use('/users', createUserRouter({ userModel: UserModel }))
 
-    const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000  // Añadir un puerto por defecto para desarrollo
 
-    app.listen(PORT)
-}
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`) // Mensaje opcional para confirmar que el servidor se ha iniciado
+});
