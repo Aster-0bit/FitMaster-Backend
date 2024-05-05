@@ -15,5 +15,5 @@ app.use('/users', createUserRouter({ userModel: UserModel }))
 const PORT = process.env.PORT || 3000  // Añadir un puerto por defecto para desarrollo
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`) // Mensaje opcional para confirmar que el servidor se ha iniciado
+  console.log(`Server is running on port ${PORT}`) // Mensaje opcional para confirmar que el servidor se ha iniciado
 });
