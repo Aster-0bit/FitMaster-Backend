@@ -19,6 +19,10 @@ export class UserController {
 
     const newUser = await this.userModel.create({ input: result.data })
 
+    if(newUser.error) {
+      return res.status(400).json({ error: newUser.error })
+    }
+    
     res.status(201).json(newUser)
   }
 }
