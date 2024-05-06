@@ -5,7 +5,7 @@ const userSchema = z.object({
     invalid_type_error: 'User name must be a string',
     required_error: 'User name is requires'
   }),
-  email: z.string().z.email({
+  email: z.string().email({
     message: 'Invalid email address'
   }),
   password: z.string().min(4),
