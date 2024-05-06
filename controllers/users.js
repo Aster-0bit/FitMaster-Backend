@@ -1,4 +1,4 @@
-import { validateUser, validatePartialUser } from '../schemas/users.js'
+import { validateUser} from '../schemas/users.js'
 
 export class UserController {
   constructor({ userModel }) {
