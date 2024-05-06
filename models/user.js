@@ -18,4 +18,24 @@ export class UserModel {
 
     return users
   }
+
+  static async create ({ input }) {
+    const {
+      name,
+      email,
+      password
+    } = input
+
+    try {
+      const [result] = await connection.query(
+        'INSERT INTO Users ( name, email, password ) VALUES (?, ?, ?);',
+        [name, email, password]
+      )
+      const userId = result.insertId;  
+      return { userId, message: 'User created successfully' };
+    }catch (e) {
+      throw new Error('Error creating user')
+    }
+  }
+
 }
