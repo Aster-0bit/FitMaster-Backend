@@ -17,12 +17,16 @@ export class UserController {
       return res.status(400).json({ error: JSON.parse(result.error.message)})
     }
 
-    const newUser = await this.userModel.create({ input: result.data })
+    try {
+      const newUser = await this.userModel.create({ input: result.data })
 
-    if(newUser.error) {
-      return res.status(400).json({ error: newUser.error })
+      res.status(201).json(newUser);
+    } catch (e) {
+      if (e.message.includes("ER_DUP_ENTRY")) {
+        return res.status(409).json({ error: "Email already exists." });
+      } else {
+          res.status(500).json({ error: "Internal Server Error. Please try again later." });
+      }
     }
-    
-    res.status(201).json(newUser)
   }
 }
