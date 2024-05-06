@@ -34,7 +34,15 @@ export class UserModel {
       const userId = result.insertId;  
       return { userId, message: 'User created successfully' };
     }catch (e) {
-      throw new Error('Error creating user')
+      if (e.code === 'ER_DUP_ENTRY') {
+        res.status(409).send({ error: 'Email already exists.' });
+      } else {
+        res.status(500).send({ error: 'Error creating user. Please try again later.' });
+      }
+    } finally {
+      if (connection) {
+        connection.end();
+      }
     }
   }
 
