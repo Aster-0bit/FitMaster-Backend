@@ -11,11 +11,10 @@ const pool = mysql.createPool({
   queueLimit: 0
 })
 
-const connection = await mysql.createConnection(config)
 
 export class UserModel {
   static async getAll() {
-    const [users] = await connection.query(
+    const [users] = await pool.query(
       'SELECT * FROM Users'
     )
 
