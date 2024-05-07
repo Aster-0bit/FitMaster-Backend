@@ -11,6 +11,9 @@ app.disable('x-powered-by')
 
 // Configurar la ruta /users con el modelo importado
 app.use('/users', createUserRouter({ userModel: UserModel }))
+app.get('/', (req, res) => {
+  res.send('Welcome to FitMaster API')
+})
 
 const PORT = process.env.PORT || 3000  // Añadir un puerto por defecto para desarrollo
 
