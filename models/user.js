@@ -50,14 +50,11 @@ export class UserModel {
     } = input
 
     try {
-      const [user] = await pool.query(
+      const [results] = await pool.query(
         'SELECT * FROM Users WHERE email = ?;',[email]
       )
 
-      console.log(user)
-      console.log(user.email)
-      console.log(user.password)
-
+      const user = results[0]
       const passwordCorrect = user === null
         ? false
         : await bcrypt.compare(password, user.password)
