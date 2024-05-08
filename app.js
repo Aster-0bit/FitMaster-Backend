@@ -1,5 +1,6 @@
 import express, { json } from 'express'
 import { createUserRouter } from './routes/users.js'
+import { createLoginRouter } from './routes/login.js'
 import { corsMiddleware } from './middlewares/cors.js'
 import { UserModel } from './models/user.js'  // Importar UserModel directamente
 import 'dotenv/config'
@@ -11,6 +12,7 @@ app.disable('x-powered-by')
 
 // Configurar la ruta /users con el modelo importado
 app.use('/users', createUserRouter({ userModel: UserModel }))
+app.use('/login', createLoginRouter({ userModel: UserModel }))
 app.get('/', (req, res) => {
   res.send('Welcome to FitMaster API')
 })
