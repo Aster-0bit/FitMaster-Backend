@@ -60,15 +60,10 @@ export class UserModel {
         : await bcrypt.compare(password, user.password)
       
       if(!passwordCorrect) {
-        response.status(401).json({
-          error: 'Invalid email or password'
-        })
+        return { error: 'Invalid email or password' }
       }
 
-      response.send({
-        email: user.email,
-        name: user.name
-      })
+      return { user }
 
     }catch (e) {
       throw e
