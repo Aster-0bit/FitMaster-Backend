@@ -54,6 +54,10 @@ export class UserModel {
         'SELECT * FROM Users WHERE email = ?;',[email]
       )
 
+      console.log(user)
+      console.log(user.email)
+      console.log(user.password)
+
       const passwordCorrect = user === null
         ? false
         : await bcrypt.compare(password, user.password)
