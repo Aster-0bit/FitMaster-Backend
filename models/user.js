@@ -30,9 +30,11 @@ export class UserModel {
     } = input
 
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const [result] = await pool.query(
         'INSERT INTO Users ( name, email, password ) VALUES (?, ?, ?);',
-        [name, email, password]
+        [name, email, hashedPassword]
       )
       const userId = result.insertId;  
       return { userId, message: 'User created successfully' };
