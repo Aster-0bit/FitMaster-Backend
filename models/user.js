@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -63,7 +64,12 @@ export class UserModel {
         return { error: 'Invalid email or password' }
       }
 
-      return results[0]
+      const token = jwt.sign({
+        userId: results[0].user_id,
+        email: results[0].email
+      }, process.env.SECRET, {expiresIn: '3h'})
+
+      return { message: 'Successful login', token}
 
     }catch (e) {
       throw e
