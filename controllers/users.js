@@ -6,7 +6,7 @@ export class UserController {
   }
 
   getAll = async (req, res) => {
-    const users = await this.userModel.getAll()
+    const gusers = await this.userModel.getAll()
     res.json(users)
   }
 
@@ -27,6 +27,20 @@ export class UserController {
       } else {
           res.status(500).json({ error: "Internal Server Error. Please try again later." });
       }
+    }
+  }
+
+  getUserByID = async (req, res) => {
+    const userId = req.user.id
+
+    try{
+      const user = await this.userModel.getUserByID({ id: userId })
+      if (!user) {
+        return res.status(404).json({"message": "Invalid session, pleasy try again later."})
+      }
+      res.json(user)
+    }catch(e){
+      res.status(500).json({ error: "Internal Server Error. Please try again later." })
     }
   }
 }
