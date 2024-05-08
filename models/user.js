@@ -63,7 +63,7 @@ export class UserModel {
         return { error: 'Invalid email or password' }
       }
 
-      return { user }
+      return results[0]
 
     }catch (e) {
       throw e
