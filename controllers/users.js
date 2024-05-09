@@ -6,7 +6,7 @@ export class UserController {
   }
 
   getAll = async (req, res) => {
-    const gusers = await this.userModel.getAll()
+    const users = await this.userModel.getAll()
     res.json(users)
   }
 
@@ -35,7 +35,7 @@ export class UserController {
     const userId = req.user.id
 
     try{
-      const user = await this.userModel.getUserByID({ id: userId })
+      const user = await this.userModel.getUserById({ id: userId })
       if (!user) {
         return res.status(404).json({"message": "Invalid session, pleasy try again later."})
       }
