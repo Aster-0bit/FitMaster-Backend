@@ -77,7 +77,7 @@ export class UserModel {
   }
 
   static async getUserById({ id }) {
-    const [user] = await pool.query('SELECT name, email FROM Users WHERE user_id = ?;',[id.id])
+    const [user] = await pool.query('SELECT name, email FROM Users WHERE user_id = ?;',[id])
 
     if (user.length === 0) return null
 

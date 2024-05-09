@@ -41,6 +41,7 @@ export class UserController {
       }
       res.json(user)
     }catch(e){
+      console.error("Error fetching user:", e);
       res.status(500).json({ error: "Internal Server Error. Please try again later." })
     }
   }
