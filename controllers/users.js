@@ -31,6 +31,7 @@ export class UserController {
   }
 
   getUserByID = async (req, res) => {
+    console.log(req.user)
     const userId = req.user.id
 
     try{
