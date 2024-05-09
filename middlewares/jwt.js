@@ -7,14 +7,14 @@ export const verifyToken = async (req, res, next) => {
   }
 
   const token = req.headers.authorization.split(' ')[1]
-
+  console.log("Token: " + token)
   if(!token) {
     return res.status(401).json({message: 'Something went wrong'})
   }
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET)
-    console.log(decoded)
+    console.log("decoded Token" + decoded)
     req.user = { id: decoded.userId }
     next()
   }catch(e) {
