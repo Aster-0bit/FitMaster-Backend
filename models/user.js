@@ -84,4 +84,12 @@ export class UserModel {
     return user[0]
   }
 
+  static async getFavoritesById({ id }) {
+    const [favourites] = await pool.query('SELECT exerciseP_id FROM Favourites WHERE user_id = ?;',[id])
+
+    if (favourites.length === 0) return null
+
+    return favourites[0]
+  }
+
 }

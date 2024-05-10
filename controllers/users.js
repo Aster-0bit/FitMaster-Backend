@@ -45,4 +45,20 @@ export class UserController {
       res.status(500).json({ error: "Internal Server Error. Please try again later." })
     }
   }
+
+  getFavoritesById = async (req, res) => {
+    const userId = req.user.id
+
+    try{
+      const user = await this.userModel.getFavoritesById({ id: userId })
+      
+      if (!user) {
+        return res.status(404).json({"message": "Invalid session, pleasy try again later."})
+      }
+      res.json(user)
+    }catch(e){
+
+      res.status(500).json({ error: "Internal Server Error. Please try again later." })
+    }
+  }
 }

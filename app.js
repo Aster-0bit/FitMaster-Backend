@@ -11,7 +11,7 @@ app.use(corsMiddleware())
 app.disable('x-powered-by')
 
 // Configurar la ruta /users con el modelo importado
-app.use('/users', createUserRouter({ userModel: UserModel }))
+app.use('/user', createUserRouter({ userModel: UserModel }))
 app.use('/login', createLoginRouter({ userModel: UserModel }))
 app.get('/', (req, res) => {
   res.send('Welcome to FitMaster API')
