@@ -53,7 +53,7 @@ export class UserController {
       const user = await this.userModel.getFavoritesById({ id: userId })
       console.log(user)
       if (!user) {
-        return res.status(404).json({"message": "Invalid session, pleasy try again later."})
+        return res.status(404).json({"message": "Not Favourites found"})
       }
       res.json(user)
     }catch(e){
