@@ -1,4 +1,5 @@
 import { validatePartialUser } from '../schemas/users.js'
+import jwt from 'jsonwebtoken';
 
 export class LoginController {
   constructor({ userModel }) {
@@ -24,18 +25,42 @@ export class LoginController {
   }
 
   findOne = async (req, res) => {
+    const result = validatePartialUser(req.body)
 
-    const { accesToken, refreshToken } = req.tokens
+    if(!result.success) {
+      return res.status(400).json({ error: JSON.parse(result.error.message)})
+    }
 
-    res.cookie('token', refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'strict' ,
-      maxAge: 4 * 24 * 60 * 60 * 1000
-    })
+    try {
+      const user = await this.userModel.findOne({ email, password })
 
-    res.json({
-      token: accesToken
-    })
+      if(!user.id) {
+        return res.status(400).json({error: "Something went wrong"})
+      }
+
+      const accessToken = jwt.sign({
+        id: user.id,
+        email: user.email,
+        name: user.name
+      }, process.env.SECRET, { expires: '3h' })
+
+      const refreshToken = jwt.sign({
+        id: user.id,
+        email: user.email,
+        name: user.name
+      }, process.env.SECRET, { expires: '4d' })
+
+      res.cookie('refreshToken', refreshToken), {
+        httpOnly: true,
+        secure: false,
+        maxAge: 4 * 24 * 60 * 60 * 1000,
+        sameSite: 'strict'
+      }
+
+      return res.status(200).json({ token: accessToken })
+
+    }catch(err) {
+      res.status(500).json({ error: "Internal Server Error. Please try again later"})
+    }
   }
 }
