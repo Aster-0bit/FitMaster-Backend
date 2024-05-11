@@ -92,4 +92,36 @@ export class UserModel {
     return favourites[0]
   }
 
+  static async getRoutine({day_id, user_id}) {
+
+    const query = `
+        SELECT 
+            EC.reps, 
+            EC.sets, 
+            EC.weight, 
+            EC.rest, 
+            EC.duration, 
+            EC.intensity, 
+            E.name AS exercise_name
+        FROM 
+            ExercisesConfigurations EC
+        JOIN 
+            ExercisesConfigurationsDays ECD ON EC.exerciseP_id = ECD.exerciseP_id
+        JOIN 
+            Exercises E ON EC.exercise_id = E.exercise_id
+        WHERE 
+            ECD.day_id = ? AND 
+            ECD.user_id = ?
+    `;
+    try {
+      const [routine] = await pool.query(query,[day_id, user_id])
+
+      return routine[0]
+
+    }catch(err) {
+      console.error('Error getting the routine')
+      throw err
+    }
+  }
+
 }

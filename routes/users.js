@@ -10,7 +10,9 @@ export const createUserRouter = ({ userModel }) => {
   usersRouter.get('/users', userController.getAll)
   usersRouter.post('/', userController.create)
   usersRouter.get('/', verifyToken, userController.getUserByID)
+
   usersRouter.get('/favourites', verifyToken, userController.getFavoritesById)
-  
+  usersRouter.get('/routine/:day', verifyToken, userController.getRoutineByDay)
+
   return usersRouter
 }

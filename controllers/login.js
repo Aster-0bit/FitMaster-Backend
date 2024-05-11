@@ -53,25 +53,32 @@ export class LoginController {
     }
   }
 
+  // Esta función se encarga de refrescar los tokens de acceso
   refreshToken = async (req, res)  => {
+    // Obtener el token de refresco de la cookie
     const { token } = req.cookies
 
+    // Comprobar que el token de refresco exista
     if(!token) {
       return res.status(401).json({"message": "Something went wrong"})
     }
 
+    // Verificar el token de refresco
     try {
       const decoded = jwt.verify(token, process.env.REFRESH_SECRET)
 
+      // Generar un nuevo token de acceso
       const accessToken = jwt.sign({
         id: decoded.id,
         email: decoded.email,
         name: decoded.name
       }, process.env.SECRET, { expiresIn: '3h'})
 
+      // Enviar el token de acceso en la respusta de la petición
       return res.status(200).json({ token: accessToken })
 
     }catch(err) {
+      
       return res.status(401).json({"message": "Invalid session. Please log in again"})
     }
 
