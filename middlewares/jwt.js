@@ -15,7 +15,7 @@ export const verifyToken = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.SECRET)
     console.log("decoded Token" + decoded.userId)
-    req.user = { id: decoded.userId }
+    req.user = { id: decoded.id }
     next()
   }catch(e) {
     return res.status(401).json({ message: 'Invalid session. Please log in again. '})
