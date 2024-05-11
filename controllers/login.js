@@ -45,13 +45,13 @@ export class LoginController {
         id: user.id,
         email: user.email,
         name: user.name
-      }, process.env.SECRET, { expires: '3h' })
+      }, process.env.SECRET, { expiresIn: '3h' })
 
       const refreshToken = jwt.sign({
         id: user.id,
         email: user.email,
         name: user.name
-      }, process.env.SECRET, { expires: '4d' })
+      }, process.env.SECRET, { expiresIn: '4d' })
 
       res.cookie('refreshToken', refreshToken), {
         httpOnly: true,
