@@ -38,7 +38,7 @@ export class UserModel {
         [name, email, hashedPassword]
       )
       const userId = result.insertId;  
-      return { userId, message: 'User created successfully' };
+      return { message: 'User created successfully' };
     }catch (e) {
       throw e
     }
@@ -69,7 +69,7 @@ export class UserModel {
         email: results[0].email
       }, process.env.SECRET, {expiresIn: '3h'})
 
-      return { message: 'Successful login', token}
+      return { message: 'Successful login', id: user.user_id, name: user.name, email: user.email}
 
     }catch (e) {
       throw e

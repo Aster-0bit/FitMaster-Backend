@@ -4,13 +4,9 @@ export class LoginController {
   constructor({ userModel }) {
     this.userModel = userModel
   }
-
-  getAll = async (req, res) => {
-    const users = await this.userModel.getAll()
-    res.json(users)
-  }
-
+  // Función para crear usuarios
   create = async (req, res) => {
+    // Validación del body de la petición
     const result = validateUser(req.body)
 
     if(!result.success) {
@@ -18,27 +14,28 @@ export class LoginController {
     }
 
     try {
+      // Creación del nuevo usuario haciendo uso de la función del modelo
       const newUser = await this.userModel.create({ input: result.data })
-
+      // Responde con el estado 201, y con el reultado de la función del modelo
       res.status(201).json(newUser);
     } catch (e) {
-      if (e.message.includes("ER_DUP_ENTRY")) {
-        return res.status(409).json({ error: "Email already exists." });
-      } else {
-          res.status(500).json({ error: "Internal Server Error. Please try again later." });
-      }
+      res.status(500).json({ error: "Internal Server Error. Please try again later." });
     }
   }
 
   findOne = async (req, res) => {
-    const result = validatePartialUser(req.body)
 
-    if(!result.success) {
-      return res.status(400).json({ error: JSON.parse(result.error.message)})
-    }
+    const { accesToken, refreshToken } = req.tokens
 
-    const loginUser = await this.userModel.findOne({ input: result.data })
+    res.cookie('token', refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict' ,
+      maxAge: 4 * 24 * 60 * 60 * 1000
+    })
 
-    res.status(200).json(loginUser)
+    res.json({
+      token: accesToken
+    })
   }
 }
