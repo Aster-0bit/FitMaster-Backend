@@ -5,42 +5,26 @@ export class LoginController {
   constructor({ userModel }) {
     this.userModel = userModel
   }
-  // Función para crear usuarios
-  create = async (req, res) => {
-    // Validación del body de la petición
-    const result = validateUser(req.body)
-
-    if(!result.success) {
-      return res.status(400).json({ error: JSON.parse(result.error.message)})
-    }
-
-    try {
-      // Creación del nuevo usuario haciendo uso de la función del modelo
-      const newUser = await this.userModel.create({ input: result.data })
-      // Responde con el estado 201, y con el reultado de la función del modelo
-      res.status(201).json(newUser);
-    } catch (e) {
-      res.status(500).json({ error: "Internal Server Error. Please try again later." });
-    }
-  }
-
+  // Esta función se encarga de hacer login y devolver tokens de acceso y refreso
   findOne = async (req, res) => {
+    // Validación del body de la petición
     const result = validatePartialUser(req.body)
 
+    // Comprobar que la validación sea satisfactoria
     if(!result.success) {
       return res.status(400).json({ error: JSON.parse(result.error.message)})
     }
 
     try {
-      console.log(result.data.email)
-
+      // Hacer uso de la función del modelo para recuperar información del usuario
       const user = await this.userModel.findOne({ input: result.data })
 
-      console.log(user.id)
+      // Comprobar que el usuario contenga el id
       if(!user.id) {
         return res.status(400).json({error: "Something went wrong"})
       }
 
+      // Generar tokens de acceso y refresco
       const accessToken = jwt.sign({
         id: user.id,
         email: user.email,
@@ -51,8 +35,9 @@ export class LoginController {
         id: user.id,
         email: user.email,
         name: user.name
-      }, process.env.SECRET, { expiresIn: '4d' })
+      }, process.env.REFRESH_SECRET, { expiresIn: '4d' })
 
+      // Enviar un token de refresco en una cookie HttpOnly
       res.cookie('refreshToken', refreshToken), {
         httpOnly: true,
         secure: false,
@@ -60,11 +45,35 @@ export class LoginController {
         sameSite: 'strict'
       }
 
+      // Enviar el token de refresco en la respusta de la petición
       return res.status(200).json({ token: accessToken })
 
     }catch(err) {
-      console.log(err)
       res.status(500).json({ error: "Internal Server Error. Please try again later"})
     }
+  }
+
+  refreshToken = async (req, res)  => {
+    const { token } = req.cookies
+
+    if(!token) {
+      return res.status(401).json({"message": "Something went wrong"})
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.REFRESH_SECRET)
+
+      const accessToken = jwt.sign({
+        id: decoded.id,
+        email: decoded.email,
+        name: decoded.name
+      }, process.env.SECRET, { expiresIn: '3h'})
+
+      return res.status(200).json({ token: accessToken })
+
+    }catch(err) {
+      return res.status(401).json({"message": "Invalid session. Please log in again"})
+    }
+
   }
 }

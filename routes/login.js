@@ -7,6 +7,7 @@ export const createLoginRouter = ({ userModel }) => {
   const loginController = new LoginController({ userModel })
 
   loginRouter.post('/', loginController.findOne)
+  loginRouter.post('/refresh', loginController.refreshToken)
   
   return loginRouter
 }
