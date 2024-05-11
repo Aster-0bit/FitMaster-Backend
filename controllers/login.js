@@ -32,8 +32,11 @@ export class LoginController {
     }
 
     try {
-      const user = await this.userModel.findOne({ email, password })
+      console.log(result.data.email)
 
+      const user = await this.userModel.findOne({ input: result.data })
+
+      console.log(user.id)
       if(!user.id) {
         return res.status(400).json({error: "Something went wrong"})
       }
@@ -60,6 +63,7 @@ export class LoginController {
       return res.status(200).json({ token: accessToken })
 
     }catch(err) {
+      console.log(err)
       res.status(500).json({ error: "Internal Server Error. Please try again later"})
     }
   }

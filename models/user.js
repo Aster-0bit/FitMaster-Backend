@@ -30,6 +30,7 @@ export class UserModel {
       password
     } = input
 
+    console.log(input)
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -49,7 +50,6 @@ export class UserModel {
       email,
       password
     } = input
-
     try {
       const [results] = await pool.query(
         'SELECT * FROM Users WHERE email = ?;',[email]
