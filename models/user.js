@@ -118,7 +118,7 @@ export class UserModel {
             ExCD.day_id = ?;
     `;
     try {
-      const [routine] = await pool.query(query,[day_id, user_id])
+      const [routine] = await pool.query(query,[ user_id, day_id] )
       console.log('Rutina \n:' + routine[0].data)
       return routine[0]
 
