@@ -9,6 +9,8 @@ export const createExerciseRouter = ({ exerciseModel }) => {
 
   exerciseRouter.get('/', exerciseController.getAllExercises)
   exerciseRouter.get('/:exerciseId', verifyToken, exerciseController.getExerciseById)
+  exerciseRouter.get('/role/:role', verifyToken, exerciseController.getExerciseByRole)
+
   exerciseRouter.post('/', verifyToken, exerciseController.createExercise)
   exerciseRouter.put('/:exerciseId', verifyToken, exerciseController.updateExercise)
   exerciseRouter.delete('/:exerciseId/day/:dayId', verifyToken, exerciseController.deleteExerciseFromDay)

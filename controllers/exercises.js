@@ -72,4 +72,11 @@ export class ExerciseController {
     }
   }
 
+  getExerciseByRole = async (req, res) => {
+    const exercises = await this.exerciseModel.getExerciseByRole({role_id: req.params.role, user_id: req.user.id})
+    if (!exercises) {
+      return res.status(404).json({"message": "Exercise not found"})
+    }
+    res.json(exercises)
+  }
 }
