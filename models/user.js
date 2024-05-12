@@ -95,34 +95,35 @@ export class UserModel {
   static async getRoutine({day_id, user_id}) {
 
     const query = `
-      SELECT 
-        Ex.name AS Exercise_Name,
-        Ex.description AS Description,
-        ExC.reps AS Repetitions,
-        ExC.sets AS Sets,
-        ExC.weight AS Weight,
-        ExC.rest AS Rest,
-        ExC.duration AS Duration,
-        ExC.intensity AS Intensity,
-        D.name AS Day_Name
-        FROM 
-            ExercisesConfigurationsDays ExCD
-        JOIN 
-            ExercisesConfigurations ExC ON ExCD.exerciseP_id = ExC.exerciseP_id
-        JOIN 
-            Exercises Ex ON ExC.exercise_id = Ex.id
-        JOIN 
-            Days D ON ExCD.day_id = D.day_id
-        WHERE 
-            ExCD.user_id = ? AND
-            ExCD.day_id = ?;
+    SELECT 
+    Ex.name AS Exercise_Name,
+    Ex.description AS Description,
+    ExC.reps AS Repetitions,
+    ExC.sets AS Sets,
+    ExC.weight AS Weight,
+    ExC.rest AS Rest,
+    ExC.duration AS Duration,
+    ExC.intensity AS Intensity,
+    D.name AS Day_Name
+    FROM 
+        ExercisesConfigurationsDays ExCD
+    LEFT JOIN 
+        ExercisesConfigurations ExC ON ExCD.exerciseP_id = ExC.exerciseP_id
+    LEFT JOIN 
+        Exercises Ex ON ExC.exercise_id = Ex.exercise_id
+    LEFT JOIN 
+        Days D ON ExCD.day_id = D.day_id
+    WHERE 
+    ExCD.user_id = ? AND
+    ExCD.day_id = ?;
     `;
     try {
       const [routine] = await pool.query(query,[ user_id, day_id] )
-      console.log('Rutina \n:' + routine[0].data)
-      return routine[0]
+      console.log('Rutina \n:' + routine)
+      return routine
 
     }catch(err) {
+      console.log(err)
       console.error('Error getting the routine')
       throw err
     }
