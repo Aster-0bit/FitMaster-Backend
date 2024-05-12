@@ -63,10 +63,9 @@ export class UserController {
   }
 
   getRoutineByDay = async (req, res) => {
-    const userId = req.user.id
-
     try {
       const routine = await this.userModel.getRoutine( { day_id: req.params.day, user_id: req.user.id } )
+      
       res.json(routine)
 
     }catch(e) {

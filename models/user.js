@@ -95,23 +95,27 @@ export class UserModel {
   static async getRoutine({day_id, user_id}) {
 
     const query = `
-        SELECT 
-            EC.reps, 
-            EC.sets, 
-            EC.weight, 
-            EC.rest, 
-            EC.duration, 
-            EC.intensity, 
-            E.name AS exercise_name
+      SELECT 
+        Ex.name AS Exercise_Name,
+        Ex.description AS Description,
+        ExC.reps AS Repetitions,
+        ExC.sets AS Sets,
+        ExC.weight AS Weight,
+        ExC.rest AS Rest,
+        ExC.duration AS Duration,
+        ExC.intensity AS Intensity,
+        D.name AS Day_Name
         FROM 
-            ExercisesConfigurations EC
+            ExercisesConfigurationsDays ExCD
         JOIN 
-            ExercisesConfigurationsDays ECD ON EC.exerciseP_id = ECD.exerciseP_id
+            ExercisesConfigurations ExC ON ExCD.exerciseP_id = ExC.exerciseP_id
         JOIN 
-            Exercises E ON EC.exercise_id = E.exercise_id
+            Exercises Ex ON ExC.exercise_id = Ex.id
+        JOIN 
+            Days D ON ExCD.day_id = D.day_id
         WHERE 
-            ECD.day_id = ? AND 
-            ECD.user_id = ?
+            ExCD.user_id = ? AND
+            ExCD.day_id = ?;
     `;
     try {
       const [routine] = await pool.query(query,[day_id, user_id])
