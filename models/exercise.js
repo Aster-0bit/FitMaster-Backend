@@ -184,4 +184,32 @@ export class ExerciseModel {
       return { message: "Error getting Exercise"}
     }
   }
+
+  static async setFavourite({ user_id, exerciseP_id }) {
+    try{
+      const query = `
+        INSERT INTO Favourites (user_id, exerciseP_id)
+        VALUES (?, ?)
+      `
+      const[results] = await pool.query(query, [user_id, exerciseP_id])
+      return results
+    }catch (err) {
+      console.log(err)
+    }
+  }
+
+  static async deleteFavourite({ user_id, exerciseP_id}) {
+    try {
+      const query = `
+        DELETE fav_id, user_id, exerciseP_id 
+        FROM Favourites 
+        WHERE user_id = ? AND
+        exerciseP_id = ? 
+      `
+
+      const[results] = await pool.query(query, [user_id, exerciseP_id])
+    }catch (err) {
+      console.log(err)
+    }
+  }
 }
