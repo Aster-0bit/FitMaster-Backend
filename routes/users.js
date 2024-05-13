@@ -14,5 +14,6 @@ export const createUserRouter = ({ userModel }) => {
   usersRouter.get('/favourites', verifyToken, userController.getFavoritesById)
   usersRouter.get('/routine/:day', verifyToken, userController.getRoutineByDay)
 
+  
   return usersRouter
 }

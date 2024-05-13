@@ -13,7 +13,7 @@ export class ExerciseController {
   getExerciseById = async (req, res) => {
     const exercise = await this.exerciseModel.getExerciseById({id: req.params.exerciseId})
     if (!exercise) {
-      return res.status(404).json({"message": "Exercise not found"})
+      return res.status(404).json({"message": "12Exercise not found"})
     }
     res.json(exercise)
   }
@@ -75,8 +75,27 @@ export class ExerciseController {
   getExerciseByRole = async (req, res) => {
     const exercises = await this.exerciseModel.getExerciseByRole({role_id: req.params.role, user_id: req.user.id})
     if (!exercises) {
-      return res.status(404).json({"message": "Exercise not found"})
+      return res.status(404).json({"message": "1Exercise not found"})
     }
     res.json(exercises)
   }
+
+  getRecentExercises = async (req, res) => {
+    const exercises = await this.exerciseModel.getRecentExercises({user_id: req.user.id})
+    if (!exercises) {
+      return res.status(404).json({"message": " Aquí Exercise not found"})
+    }
+    console.log('Estos son:' + exercises)
+    res.json(exercises)
+  }
+
+  getExercisesByMuscleGroup = async (req, res) => {
+    const exercises = await this.exerciseModel.getExercisesByMuscleGroup({ user_id: req.user.id, muscle_group_id: req.params.muscleGroupId });
+    if (!exercises) {
+      return res.status(404).json({ "message": "3Exercises not found" });
+    }
+    res.json(exercises);
+  }
+
+
 }

@@ -149,5 +149,39 @@ export class ExerciseModel {
     }
   }
 
+  static async getRecentExercises ({ user_id }) {
+    try{
+      const query = `
+        SELECT EC.exerciseP_id, E.name, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
+        FROM ExercisesConfigurations EC
+        JOIN Exercises E ON EC.exercise_id = E.exercise_id
+        WHERE EC.user_id =?
+        ORDER BY EC.exerciseP_id DESC
+        LIMIT 10;
+      `
+      const[exercises] = await pool.query(query, [user_id])
+      console.log(exercises)
+      return exercises
+    }catch (err) {
+      console.error(err)
+      return { message: "qError getting Exercise"}
+    }
+  }
 
+  static async getExercisesByMuscleGroup({ user_id, muscle_group_id }) {
+    try {
+      const query = `
+        SELECT EC.exerciseP_id, E.name, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
+        FROM ExercisesConfigurations EC
+        JOIN Exercises E ON EC.exercise_id = E.exercise_id
+        WHERE EC.user_id = ? AND E.muscle_group_id = ?;
+      `
+      const [exercises] = await pool.query(query, [user_id, muscle_group_id])
+  
+      return exercises
+    } catch (err) {
+      console.error(err)
+      return { message: "Error getting Exercise"}
+    }
+  }
 }

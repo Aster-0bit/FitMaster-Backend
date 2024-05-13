@@ -8,8 +8,11 @@ export const createExerciseRouter = ({ exerciseModel }) => {
   const exerciseController = new ExerciseController({ exerciseModel })
 
   exerciseRouter.get('/', exerciseController.getAllExercises)
-  exerciseRouter.get('/:exerciseId', verifyToken, exerciseController.getExerciseById)
   exerciseRouter.get('/role/:role', verifyToken, exerciseController.getExerciseByRole)
+  exerciseRouter.get('/recent', verifyToken, exerciseController.getRecentExercises)
+  exerciseRouter.get('/muscle-group/:muscleGroupId', verifyToken, exerciseController.getExercisesByMuscleGroup)
+  exerciseRouter.get('/:exerciseId', verifyToken, exerciseController.getExerciseById)
+
 
   exerciseRouter.post('/', verifyToken, exerciseController.createExercise)
   exerciseRouter.put('/:exerciseId', verifyToken, exerciseController.updateExercise)

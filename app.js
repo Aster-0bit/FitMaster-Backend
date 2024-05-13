@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to FitMaster API')
 })
 
-const PORT = process.env.PORT || 3000  // Añadir un puerto por defecto para desarrollo
+const PORT = process.env.PORT || 3306  // Añadir un puerto por defecto para desarrollo
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`) // Mensaje opcional para confirmar que el servidor se ha iniciado
