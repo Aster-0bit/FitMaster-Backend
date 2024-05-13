@@ -201,7 +201,7 @@ export class ExerciseModel {
   static async deleteFavourite({ user_id, exerciseP_id}) {
     try {
       const query = `
-        DELETE fav_id, user_id, exerciseP_id 
+        DELETE 
         FROM Favourites 
         WHERE user_id = ? AND
         exerciseP_id = ? 
