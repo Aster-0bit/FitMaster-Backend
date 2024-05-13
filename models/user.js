@@ -70,6 +70,37 @@ export class UserModel {
     }
   }
 
+  static async findByEmail({ email }) {
+    try {
+      const [results] = await pool.query(
+        'SELECT user_id, name, email FROM Users WHERE email = ?;',[email]
+      )
+
+      return results[0]
+    }catch (err) {
+      return { message: "Error getting User"}
+    }
+  }
+
+  static async resetPassword({ input }) {
+    const {
+      id,
+      password
+    } = input
+
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const [result] = await pool.query(
+        'UPDATE Users SET password = ? WHERE user_id = ?;',
+        [hashedPassword, id]
+      )
+      return { message: 'Password updated successfully' };
+    }catch (err) {
+      return { message: "Error updating password"}
+    }
+  }
+
   static async getUserById({ id }) {
     const [user] = await pool.query('SELECT name, email FROM Users WHERE user_id = ?;',[id])
 

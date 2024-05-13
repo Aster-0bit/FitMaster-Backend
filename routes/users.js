@@ -13,7 +13,7 @@ export const createUserRouter = ({ userModel }) => {
 
   usersRouter.get('/favourites', verifyToken, userController.getFavoritesById)
   usersRouter.get('/routine/:day', verifyToken, userController.getRoutineByDay)
-
-  
+  usersRouter.post('/forgot-password', userController.forgotPassword)
+  usersRouter.post('/reset-password/:token', userController.resetPassword)
   return usersRouter
 }

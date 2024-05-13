@@ -1,4 +1,6 @@
 import { validateUser } from '../schemas/users.js'
+import { sendResetPasswordEmail } from '../middlewares/auth.js'
+import jwt from 'jsonwebtoken'
 
 export class UserController {
   constructor({ userModel }) {
@@ -70,6 +72,43 @@ export class UserController {
 
     }catch(e) {
       res.status(500).json({ error: "Something went wrong. Please try again later." })
+    }
+  }
+
+  forgotPassword = async (req, res) => {
+    const { email } = req.body
+
+    try {
+      const result = await this.userModel.findByEmail({ email })
+      
+      if (!result) {
+        return res.status(404).json({ message: "Check your email for further instructions." })
+      }
+
+      const token = jwt.sign({ id: result.user_id, email: result.email }, process.env.REFRESH_SECRET, { expiresIn: '15m' })
+
+      await sendResetPasswordEmail({ email, token })
+      res.status(200).json({ message: "Reset password email sent successfully." })  
+    }catch(e) {
+      res.status(500).json({ error: "Internal Server Error. Please try again later." })
+    }
+  }
+
+  resetPassword = async (req, res) => {
+    const { password } = req.body
+    const token = req.params.token
+
+    try {
+      const decoded = jwt.verify(token, process.env.REFRESH_SECRET)
+      const result = await this.userModel.resetPassword({ input: { id: decoded.id, password }})
+
+      if (!result) {
+        return res.status(404).json({ message: "Invalid session. Please try again later." })
+      }
+
+      res.status(200).json({ message: "Password reset successfully." })
+    }catch(e) {
+      res.status(500).json({ error: "Internal Server Error. Please try again later." })
     }
   }
 }
