@@ -97,5 +97,23 @@ export class ExerciseController {
     res.json(exercises);
   }
 
+  setFavourite = async (req, res) => {
+    const results = await this.exerciseModel.setFavourite({ user_id: req.user.id, exerciseP_id: req.params.exerciseId })
+      
+    if (!results) {
+      return res.status(404).json({ "message": "cant add favourite" });
+    }
 
+    return res.status(201).json({"message": "Favourite added succesfully"})
+  }
+
+  deleteFavourite = async (req, res) => {
+    const results = await this.exerciseModel.deleteFavourite({ user_id: req.user.id, exerciseP_id: req.params.exerciseId})
+
+    if(!results) {
+      return res.status(404).json({ "message": "cant delete favourite" });
+    }
+    
+    return res.status(201).json({"message": "Favourite deleted successfully"})
+  }
 }
