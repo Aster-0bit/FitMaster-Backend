@@ -28,7 +28,7 @@ async function sendResetPasswordEmail({ email, token }) {
       to: 'email',
       subject: 'Reset your password',
       text: 'Click the link below to reset your password',
-      html: `<a href="http://localhost:3000/reset-password/${token}">Reset Password</a>`
+      html: `<a href="https://fit-master-frontend.vercel.app/reset-password/${token}">Reset Password</a>`
     };
 
     await transporter.sendMail(mailOptions);
