@@ -25,7 +25,7 @@ async function sendResetPasswordEmail({ email, token }) {
 
     const mailOptions = {
       from: 'FITMASTER <jonathanrioja38@gmail.com>',
-      to: 'email',
+      to: email,
       subject: 'Reset your password',
       text: 'Click the link below to reset your password',
       html: `<a href="http://localhost:3000/reset-password/${token}">Reset Password</a>`
