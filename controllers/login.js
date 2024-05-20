@@ -40,7 +40,7 @@ export class LoginController {
       // Enviar un token de refresco en una cookie HttpOnly
       res.cookie('refreshToken', refreshToken), {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 4 * 24 * 60 * 60 * 1000,
         sameSite: 'strict'
       }
@@ -56,16 +56,17 @@ export class LoginController {
   // Esta función se encarga de refrescar los tokens de acceso
   refreshToken = async (req, res)  => {
     // Obtener el token de refresco de la cookie
-    const { token } = req.cookies
+    const { refreshToken } = req.cookies
 
+    console.log(refreshToken)
     // Comprobar que el token de refresco exista
-    if(!token) {
+    if(!refreshToken) {
       return res.status(401).json({"message": "Something went wrong"})
     }
 
     // Verificar el token de refresco
     try {
-      const decoded = jwt.verify(token, process.env.REFRESH_SECRET)
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET)
 
       // Generar un nuevo token de acceso
       const accessToken = jwt.sign({
