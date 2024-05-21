@@ -37,16 +37,8 @@ export class LoginController {
         name: user.name
       }, process.env.REFRESH_SECRET, { expiresIn: '4d' })
 
-      // Enviar un token de refresco en una cookie HttpOnly
-      res.cookie('refreshToken', refreshToken), {
-        httpOnly: true,
-        secure: true,
-        maxAge: 4 * 24 * 60 * 60 * 1000,
-        sameSite: 'strict'
-      }
-
-      // Enviar el token de refresco en la respusta de la petición
-      return res.status(200).json({ token: accessToken })
+      // Enviar el token de acceso y refresco en la respusta de la petición
+      return res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken})
 
     }catch(err) {
       res.status(500).json({ error: "Internal Server Error. Please try again later"})
@@ -55,8 +47,8 @@ export class LoginController {
 
   // Esta función se encarga de refrescar los tokens de acceso
   refreshToken = async (req, res)  => {
-    // Obtener el token de refresco de la cookie
-    const { refreshToken } = req.cookies
+    // Obtener el token de refresco del body
+    const { refreshToken } = req.body
 
     console.log(refreshToken)
     // Comprobar que el token de refresco exista
@@ -76,7 +68,7 @@ export class LoginController {
       }, process.env.SECRET, { expiresIn: '3h'})
 
       // Enviar el token de acceso en la respusta de la petición
-      return res.status(200).json({ token: accessToken })
+      return res.status(200).json({ accessToken: accessToken })
 
     }catch(err) {
       
