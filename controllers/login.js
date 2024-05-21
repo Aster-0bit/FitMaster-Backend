@@ -47,14 +47,18 @@ export class LoginController {
 
   // Esta función se encarga de refrescar los tokens de acceso
   refreshToken = async (req, res)  => {
-    // Obtener el token de refresco del body
-    const { refreshToken } = req.body
+    // Obtener el token de la cabecera Authorization
+    const authHeader = req.headers.authorization;
+
+    // Comprobar que la cabecera Authorization exista y comience con 'Bearer '
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ "message": "Authorization header is missing or invalid" });
+    }
+
+    // Extraer el token
+    const refreshToken = authHeader.split(' ')[1];
 
     console.log(refreshToken)
-    // Comprobar que el token de refresco exista
-    if(!refreshToken) {
-      return res.status(401).json({"message": "Something went wrong"})
-    }
 
     // Verificar el token de refresco
     try {
