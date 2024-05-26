@@ -34,13 +34,14 @@ export class ExerciseModel {
       
     } = input
 
-    console.log(input)
+    
     try {
       const [result] = await pool.query(
         'INSERT INTO ExercisesConfigurations ( exercise_id, user_id, reps, sets, weight, rest, duration, intensity ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
         [exercise_id, user_id, reps, sets, weight, rest, duration, intensity]
       )
-      return { message: 'Custom Exercise created successfully' };
+
+      return { message: 'Custom Exercise created successfully', id: result.insertId };
     }catch (err) {
       throw { message: "Error creating Exercise"}
     }
