@@ -123,6 +123,7 @@ export class UserModel {
     SELECT 
         Ex.name AS Exercise_Name,
         Ex.description AS Description,
+        ExC.exerciseP_id AS ExerciseP_id,
         ExC.reps AS Repetitions,
         ExC.sets AS Sets,
         ExC.weight AS Weight,
