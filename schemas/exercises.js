@@ -26,6 +26,7 @@ const exerciseSchema = z.object({
     invalid_type_error: 'Rest must be a number',
     required_error: 'Rest are required'
   }).min(1, { message: "Rest must be at least 1" }).optional(),
+  note: z.string().optional()
 });
 
 export function validateExercise(input) {
