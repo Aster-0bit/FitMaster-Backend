@@ -122,7 +122,7 @@ export class UserModel {
     const query = `
     SELECT 
         Ex.name AS Exercise_Name,
-        Ex.description AS Description,
+        ExC.note AS Note,
         ExC.exerciseP_id AS ExerciseP_id,
         ExC.reps AS Repetitions,
         ExC.sets AS Sets,

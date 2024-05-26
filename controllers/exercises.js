@@ -11,7 +11,7 @@ export class ExerciseController {
   }
 
   getExerciseById = async (req, res) => {
-    const exercise = await this.exerciseModel.getExerciseById({id: req.params.exerciseId})
+    const exercise = await this.exerciseModel.getExerciseById({exerciseP_id: req.params.exerciseId, user_id: req.user.id})
     if (!exercise) {
       return res.status(404).json({"message": "12Exercise not found"})
     }
@@ -111,7 +111,7 @@ export class ExerciseController {
     const results = await this.exerciseModel.deleteFavourite({ user_id: req.user.id, exerciseP_id: req.params.exerciseId})
 
     if(!results) {
-      return res.status(404).json({ "message": "cant delete favourite" });
+      return res.status(404).json({ "message": "can't delete favourite" });
     }
     
     return res.status(201).json({"message": "Favourite deleted successfully"})

@@ -48,14 +48,16 @@ export class ExerciseModel {
 
   
 
-  static async getExerciseById({ id }) {
+  static async getExerciseById({ exerciseP_id, user_id  }) {
 
     try {
       const [exercise] = await pool.query(
-        `SELECT reps, sets, weight, rest, duration, intensity 
-        FROM ExercisesConfigurations 
-        WHERE exerciseP_id = ?;`
-        ,[id])
+        `SELECT E.name, exerciseP_id, reps, sets, weight, rest, duration, intensity, note 
+        FROM ExercisesConfigurations AS EC
+        JOIN Exercises E ON EC.exercise_id = E.exercise_id 
+        WHERE exerciseP_id = ?
+        AND user_id = ?;`
+        ,[exerciseP_id, user_id])
   
       if (exercise.length === 0) return null
   
