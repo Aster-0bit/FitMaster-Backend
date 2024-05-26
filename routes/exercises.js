@@ -13,6 +13,7 @@ export const createExerciseRouter = ({ exerciseModel }) => {
   exerciseRouter.get('/muscle-group/:muscleGroupId', verifyToken, exerciseController.getExercisesByMuscleGroup)
   exerciseRouter.get('/:exerciseId', verifyToken, exerciseController.getExerciseById)
 
+  exerciseRouter.post('/id/:exerciseId/day/:dayId', verifyToken, exerciseController.setExerciseToDay)
   exerciseRouter.post('/favourite/:exerciseId', verifyToken, exerciseController.setFavourite)
   exerciseRouter.delete('/favourite/:exerciseId', verifyToken, exerciseController.deleteFavourite)
   exerciseRouter.post('/', verifyToken, exerciseController.createExercise)

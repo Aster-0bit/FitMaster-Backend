@@ -116,4 +116,14 @@ export class ExerciseController {
     
     return res.status(201).json({"message": "Favourite deleted successfully"})
   }
+
+  setExerciseToDay = async (req, res) => {
+    const results = await this.exerciseModel.setExerciseToDay({ input: { user_id: req.user.id, exerciseP_id: req.params.exerciseId, day_id: req.params.dayId} })
+    console.log('hola')
+    if (!results) {
+      return res.status(404).json({ "message": "cant add exercise to day" });
+    }
+
+    return res.status(201).json({"message": "Exercise added succesfully"})
+  }
 }

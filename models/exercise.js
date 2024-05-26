@@ -216,4 +216,23 @@ export class ExerciseModel {
       console.log(err)
     }
   }
+
+  static async setExerciseToDay({ input }) {
+    
+    try {
+      const {
+        exerciseP_id,
+        day_id,
+        user_id
+      } = input
+      console.log(input)
+      const [results] = await pool.query(
+        'INSERT INTO ExercisesConfigurationsDays (exerciseP_id, day_id, user_id) VALUES (?, ?, ?);',
+        [exerciseP_id, day_id, user_id]
+      )
+      return { message: 'Exercise added to day successfully' };
+    }catch (err) {
+      console.log(err)
+    }
+  }
 }
