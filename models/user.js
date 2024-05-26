@@ -121,15 +121,16 @@ export class UserModel {
 
     const query = `
     SELECT 
-    Ex.name AS Exercise_Name,
-    Ex.description AS Description,
-    ExC.reps AS Repetitions,
-    ExC.sets AS Sets,
-    ExC.weight AS Weight,
-    ExC.rest AS Rest,
-    ExC.duration AS Duration,
-    ExC.intensity AS Intensity,
-    D.name AS Day_Name
+        Ex.name AS Exercise_Name,
+        Ex.description AS Description,
+        ExC.reps AS Repetitions,
+        ExC.sets AS Sets,
+        ExC.weight AS Weight,
+        ExC.rest AS Rest,
+        ExC.duration AS Duration,
+        ExC.intensity AS Intensity,
+        D.name AS Day_Name,
+        IF(Fav.exerciseP_id IS NOT NULL, TRUE, FALSE) AS Is_Favorite
     FROM 
         ExercisesConfigurationsDays ExCD
     LEFT JOIN 
@@ -138,12 +139,14 @@ export class UserModel {
         Exercises Ex ON ExC.exercise_id = Ex.exercise_id
     LEFT JOIN 
         Days D ON ExCD.day_id = D.day_id
+    LEFT JOIN 
+        Favourites Fav ON ExCD.exerciseP_id = Fav.exerciseP_id AND Fav.user_id = ?
     WHERE 
-    ExCD.user_id = ? AND
-    ExCD.day_id = ?;
+        ExCD.user_id = ? AND
+        ExCD.day_id = ?;
     `;
     try {
-      const [routine] = await pool.query(query,[ user_id, day_id] )
+      const [routine] = await pool.query(query,[ user_id, user_id, day_id] )
       console.log('Rutina \n:' + routine)
       return routine
 
