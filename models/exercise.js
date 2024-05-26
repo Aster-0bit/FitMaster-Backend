@@ -90,7 +90,7 @@ export class ExerciseModel {
         weight = COALESCE(?, weight),
         rest = COALESCE(?, rest),
         duration = COALESCE(?, duration),
-        intensity = COALESCE(?, intensity)
+        intensity = COALESCE(?, intensity),
         note = COALESCE(?, note)
       WHERE exerciseP_id = ? AND
       user_id = ?;
