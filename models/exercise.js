@@ -75,6 +75,7 @@ export class ExerciseModel {
       rest,
       duration,
       intensity,
+      note,
       exerciseP_id,
       user_id
       
@@ -90,9 +91,10 @@ export class ExerciseModel {
         rest = COALESCE(?, rest),
         duration = COALESCE(?, duration),
         intensity = COALESCE(?, intensity)
+        note = COALESCE(?, note)
       WHERE exerciseP_id = ? AND
       user_id = ?;
-      `, [reps, sets, weight, rest, duration, intensity, exerciseP_id, user_id])
+      `, [reps, sets, weight, rest, duration, intensity, note, exerciseP_id, user_id])
 
       return { message: "Exercise updated successfully"}
     }catch (err) {
