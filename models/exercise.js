@@ -157,14 +157,32 @@ export class ExerciseModel {
   static async getRecentExercises ({ user_id }) {
     try{
       const query = `
-        SELECT EC.exerciseP_id, E.name, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
-        FROM ExercisesConfigurations EC
-        JOIN Exercises E ON EC.exercise_id = E.exercise_id
-        WHERE EC.user_id =?
-        ORDER BY EC.exerciseP_id DESC
-        LIMIT 10;
+      SELECT 
+      EC.exerciseP_id, 
+      E.name, 
+      EC.reps, 
+      EC.sets, 
+      EC.weight, 
+      EC.rest, 
+      EC.duration, 
+      EC.intensity
+      FROM 
+          ExercisesConfigurations EC
+      JOIN 
+          Exercises E ON EC.exercise_id = E.exercise_id
+      WHERE 
+          EC.user_id = ? AND
+          EC.exerciseP_id IN (
+              SELECT MIN(subEC.exerciseP_id)
+              FROM ExercisesConfigurations subEC
+              WHERE subEC.user_id = EC.user_id
+              GROUP BY subEC.exercise_id
+          )
+      ORDER BY 
+          EC.exerciseP_id DESC
+      LIMIT 10;  
       `
-      const[exercises] = await pool.query(query, [user_id])
+      const[exercises] = await pool.query(query, [user_id, user_id])
       console.log(exercises)
       return exercises
     }catch (err) {
