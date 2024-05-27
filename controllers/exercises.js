@@ -117,6 +117,14 @@ export class ExerciseController {
     return res.status(201).json({"message": "Favourite deleted successfully"})
   }
 
+  getFavourites = async (req, res) => {
+    const exercises = await this.exerciseModel.getFavourites({ user_id: req.user.id })
+    if (!exercises) {
+      return res.status(404).json({ "message": "Exercises not found" });
+    }
+    res.json(exercises);
+  }
+
   setExerciseToDay = async (req, res) => {
     const results = await this.exerciseModel.setExerciseToDay({ input: { user_id: req.user.id, exerciseP_id: req.params.exerciseId, day_id: req.params.dayId} })
     console.log('hola')

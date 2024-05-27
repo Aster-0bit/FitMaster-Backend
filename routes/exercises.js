@@ -11,6 +11,7 @@ export const createExerciseRouter = ({ exerciseModel }) => {
   exerciseRouter.get('/role/:role', verifyToken, exerciseController.getExerciseByRole)
   exerciseRouter.get('/recent', verifyToken, exerciseController.getRecentExercises)
   exerciseRouter.get('/muscle-group/:muscleGroupId', verifyToken, exerciseController.getExercisesByMuscleGroup)
+  exerciseRouter.get('/favourite', verifyToken, exerciseController.getFavourites)
   exerciseRouter.get('/:exerciseId', verifyToken, exerciseController.getExerciseById)
 
   exerciseRouter.post('/id/:exerciseId/day/:dayId', verifyToken, exerciseController.setExerciseToDay)

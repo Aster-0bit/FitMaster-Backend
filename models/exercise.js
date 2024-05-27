@@ -218,6 +218,23 @@ export class ExerciseModel {
     }
   }
 
+  static async getFavourites({ user_id }) {
+    try{
+      const query = `
+        SELECT EC.exerciseP_id, E.name, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
+        FROM ExercisesConfigurations EC
+        JOIN Exercises E ON EC.exercise_id = E.exercise_id
+        JOIN Favourites F ON EC.exerciseP_id = F.exerciseP_id
+        WHERE EC.user_id = ?;
+      `
+      const[results] = await pool.query(query, [user_id])
+      console.log('hola: ' + results)
+      return results
+    }catch (err) {
+      console.log(err)
+    }
+  }
+
   static async setExerciseToDay({ input }) {
     
     try {
