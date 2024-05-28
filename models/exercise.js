@@ -30,15 +30,16 @@ export class ExerciseModel {
       weight,
       rest,
       duration,
-      intensity
+      intensity,
+      note
       
     } = input
 
     
     try {
       const [result] = await pool.query(
-        'INSERT INTO ExercisesConfigurations ( exercise_id, user_id, reps, sets, weight, rest, duration, intensity ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
-        [exercise_id, user_id, reps, sets, weight, rest, duration, intensity]
+        'INSERT INTO ExercisesConfigurations ( exercise_id, user_id, reps, sets, weight, rest, duration, intensity, note ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+        [exercise_id, user_id, reps, sets, weight, rest, duration, intensity, note]
       )
 
       return { message: 'Custom Exercise created successfully', id: result.insertId };
@@ -47,7 +48,47 @@ export class ExerciseModel {
     }
   }
 
+  static async setHistoryExercise ({ input }) {
+    try {
+      
+      const {
+        exercise_id,
+        user_id,
+        reps,
+        sets,
+        weight,
+        rest,
+        duration,
+        intensity,
+        note
+      } = input
   
+      const [result] = await pool.query(
+        'INSERT INTO ExercisesHistory ( user_id, exercise_id, reps, sets, weight, rest, duration, intensity, note ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
+        [user_id, exercise_id, reps, sets, weight, rest, duration, intensity, note]
+      )
+
+      return { message: "Exercise added to history successfully"}
+    }catch (err) {
+      return { message: "Error setting Exercise"}
+    }
+  }
+
+  static async getHistoryExercises ({ user_id }) {
+    try {
+      const [exercises] = await pool.query(
+        `SELECT E.name, exercise_id, reps, sets, weight, rest, duration, intensity, note, created_at 
+        FROM ExercisesHistory EH
+        JOIN Exercises E ON EH.exercise_id = E.exercise_id
+        WHERE user_id = ?;`,
+        [user_id]
+      )
+
+      return exercises
+    }catch (err) {
+      return { message: "Error getting Exercise"}
+    }
+  }
 
   static async getExerciseById({ exerciseP_id, user_id  }) {
 
