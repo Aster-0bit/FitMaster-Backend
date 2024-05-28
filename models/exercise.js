@@ -194,10 +194,29 @@ export class ExerciseModel {
   static async getExercisesByMuscleGroup({ user_id, muscle_group_id }) {
     try {
       const query = `
-        SELECT EC.exerciseP_id, E.name, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
-        FROM ExercisesConfigurations EC
-        JOIN Exercises E ON EC.exercise_id = E.exercise_id
-        WHERE EC.user_id = ? AND E.muscle_group_id = ?;
+      SELECT 
+      EC.exerciseP_id, 
+      E.name, 
+      EC.reps, 
+      EC.sets, 
+      EC.weight, 
+      EC.rest, 
+      EC.duration, 
+      EC.intensity
+      FROM 
+          ExercisesConfigurations EC
+      JOIN 
+          Exercises E ON EC.exercise_id = E.exercise_id
+      WHERE 
+          EC.user_id = ? AND 
+          E.muscle_group_id = ? AND
+          EC.exerciseP_id IN (
+              SELECT MIN(subEC.exerciseP_id)
+              FROM ExercisesConfigurations subEC
+              WHERE subEC.user_id = EC.user_id
+              GROUP BY subEC.exercise_id
+      );
+  
       `
       const [exercises] = await pool.query(query, [user_id, muscle_group_id])
   
