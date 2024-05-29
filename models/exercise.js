@@ -50,9 +50,9 @@ export class ExerciseModel {
 
   static async setHistoryExercise ({ input }) {
     try {
-      
       const {
         exercise_id,
+        exerciseP_id,
         user_id,
         reps,
         sets,
@@ -61,21 +61,37 @@ export class ExerciseModel {
         duration,
         intensity,
         note
-      } = input
-      
-      console.log('wyyy' + input)
-
+      } = input;
+  
+      let exerciseIdToInsert = exercise_id;
+  
+      // Si exerciseP_id está definido, obtener exercise_id asociado
+      if (exerciseP_id !== undefined) {
+        const [exerciseIdResult] = await pool.query(
+          'SELECT exercise_id FROM CustomExercises WHERE exerciseP_id = ?',
+          [exerciseP_id]
+        );
+  
+        if (exerciseIdResult.length === 0) {
+          return { message: "No se encontró el exercise_id para el exerciseP_id proporcionado" };
+        }
+  
+        exerciseIdToInsert = exerciseIdResult[0].exercise_id;
+      }
+  
+      // Insertar en ExercisesHistory usando el exercise_id obtenido o proporcionado
       const [result] = await pool.query(
-        'INSERT INTO ExercisesHistory ( user_id, exercise_id, reps, sets, weight, rest, duration, intensity, note ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
-        [user_id, exercise_id, reps, sets, weight, rest, duration, intensity, note]
-      )
-
-      return { message: "Exercise added to history successfully"}
-    }catch (err) {
-      console.log(err)
-      return { message: "Error setting Exercise1313", err, input}
+        'INSERT INTO ExercisesHistory (user_id, exercise_id, reps, sets, weight, rest, duration, intensity, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
+        [user_id, exerciseIdToInsert, reps, sets, weight, rest, duration, intensity, note]
+      );
+  
+      return { message: "Exercise added to history successfully" };
+    } catch (err) {
+      console.log(err);
+      return { message: "Error setting Exercise", err, input };
     }
   }
+  
 
   static async getHistoryExercises ({ user_id }) {
     try {
