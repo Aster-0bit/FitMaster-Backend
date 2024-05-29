@@ -68,7 +68,7 @@ export class ExerciseModel {
       // Si exerciseP_id está definido, obtener exercise_id asociado
       if (exerciseP_id !== undefined) {
         const [exerciseIdResult] = await pool.query(
-          'SELECT exercise_id FROM CustomExercises WHERE exerciseP_id = ?',
+          'SELECT exercise_id FROM ExercisesConfigurations WHERE exerciseP_id = ?',
           [exerciseP_id]
         );
   
@@ -77,6 +77,7 @@ export class ExerciseModel {
         }
   
         exerciseIdToInsert = exerciseIdResult[0].exercise_id;
+        console.log('Si: ' + exerciseIdToInsert)
       }
   
       // Insertar en ExercisesHistory usando el exercise_id obtenido o proporcionado
