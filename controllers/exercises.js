@@ -132,21 +132,24 @@ export class ExerciseController {
       return res.status(404).json({ "message": "cant add exercise to day" });
     }
 
-    return res.status(201).json({"message": "Exercise added succesfully"})
+    return res.status(201).json({"message": "Exercise history added succesfully"})
   }
 
   setExerciseHistory = async (req, res) => {
-    const results = await this.exerciseModel.setExerciseHistory({ ...req.body, user_id: req.user.id })
+    const results = await this.exerciseModel.setHistoryExercise( {input: { ...req.body, user_id: req.user.id }})
 
+    console.log({...req.body, user_id: req.user.id })
+
+    console.log(results)
     if (!results) {
       return res.status(404).json({ "message": "cant add exercise to day" });
     }
 
-    return res.status(201).json({"message": "Exercise added succesfully"})
+    return res.status(201).json({"message": "Exercise1213 added succesfully", "results": results})
   }
 
   getExerciseHistory = async (req, res) => {
-    const exercises = await this.exerciseModel.getExerciseHistory({ user_id: req.user.id })
+    const exercises = await this.exerciseModel.getHistoryExercises({ user_id: req.user.id })
     if (!exercises) {
       return res.status(404).json({ "message": "Exercises not found" });
     }

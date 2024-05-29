@@ -62,7 +62,9 @@ export class ExerciseModel {
         intensity,
         note
       } = input
-  
+      
+      console.log('wyyy' + input)
+
       const [result] = await pool.query(
         'INSERT INTO ExercisesHistory ( user_id, exercise_id, reps, sets, weight, rest, duration, intensity, note ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
         [user_id, exercise_id, reps, sets, weight, rest, duration, intensity, note]
@@ -70,23 +72,25 @@ export class ExerciseModel {
 
       return { message: "Exercise added to history successfully"}
     }catch (err) {
-      return { message: "Error setting Exercise"}
+      console.log(err)
+      return { message: "Error setting Exercise1313", err, input}
     }
   }
 
   static async getHistoryExercises ({ user_id }) {
     try {
       const [exercises] = await pool.query(
-        `SELECT E.name, exercise_id, reps, sets, weight, rest, duration, intensity, note, created_at 
+        `SELECT E.name, EH.exercise_id, reps, sets, weight, rest, duration, intensity, note, EH.created_at 
         FROM ExercisesHistory EH
-        JOIN Exercises E ON EH.exercise_id = E.exercise_id
+        JOIN Exercises E ON E.exercise_id = EH.exercise_id
         WHERE user_id = ?;`,
         [user_id]
       )
 
       return exercises
     }catch (err) {
-      return { message: "Error getting Exercise"}
+      console.error(err)
+      return { message: "Error getting Exercise1414", err}
     }
   }
 
