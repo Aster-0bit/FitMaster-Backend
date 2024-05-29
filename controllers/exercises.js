@@ -136,7 +136,8 @@ export class ExerciseController {
   }
 
   setExerciseHistory = async (req, res) => {
-    const results = await this.exerciseModel.setHistoryExercise( {input: { ...req.body, user_id: req.user.id }})
+    console.log('************************' + JSON.stringify(req.body, null, 2) + '************************' )
+    const results = await this.exerciseModel.setHistoryExercise( { ...req.body, user_id: req.user.id })
 
     console.log({...req.body, user_id: req.user.id })
 

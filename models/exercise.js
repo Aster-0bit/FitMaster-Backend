@@ -48,23 +48,13 @@ export class ExerciseModel {
     }
   }
 
-  static async setHistoryExercise ({ input }) {
+  static async setHistoryExercise ({ exercise_id, exerciseP_id, user_id, reps, sets, weight, rest, duration, intensity, note }) {
     try {
-      const {
-        exercise_id,
-        exerciseP_id,
-        user_id,
-        reps,
-        sets,
-        weight,
-        rest,
-        duration,
-        intensity,
-        note
-      } = input;
+
   
       let exerciseIdToInsert = exercise_id;
   
+      console.log('Estoo' + reps, sets, weight, rest, duration, intensity, note)
       // Si exerciseP_id está definido, obtener exercise_id asociado
       if (exerciseP_id !== undefined) {
         const [exerciseIdResult] = await pool.query(
@@ -89,7 +79,7 @@ export class ExerciseModel {
       return { message: "Exercise added to history successfully" };
     } catch (err) {
       console.log(err);
-      return { message: "Error setting Exercise", err, input };
+      return { message: "Error setting Exercise", err };
     }
   }
   
