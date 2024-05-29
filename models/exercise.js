@@ -38,7 +38,7 @@ export class ExerciseModel {
     
     try {
       const [result] = await pool.query(
-        'INSERT INTO ExercisesConfigurations ( exercise_id, user_id, reps, sets, weight, rest, duration, intensity, note ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+        'INSERT INTO ExercisesConfigurations ( exercise_id, user_id, reps, sets, weight, rest, duration, intensity, note ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
         [exercise_id, user_id, reps, sets, weight, rest, duration, intensity, note]
       )
 
