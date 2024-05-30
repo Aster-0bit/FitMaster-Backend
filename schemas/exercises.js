@@ -10,22 +10,22 @@ const exerciseSchema = z.object({
   reps: z.number({
     invalid_type_error: 'Repetitions must be a number',
     required_error: 'Repetitions are required'
-  }).min(1, { message: "Repetitions must be at least 1" }).optional(),
+  }).min(0, { message: "Repetitions must be at least 1" }).optional(),
   sets: z.number({
     invalid_type_error: 'Sets must be a number',
     required_error: 'Sets are required'
-  }).min(1, { message: "Sets must be at least 1" }).optional(),
+  }).min(0, { message: "Sets must be at least 1" }).optional(),
   weight: z.number({
     invalid_type_error: 'Weight must be a number'
   }).optional(),
   duration: z.number({
     invalid_type_error: 'Duration must be a number'
   }).optional(),
-  intensity: z.enum(['Alta', 'Media', 'Baja']).optional(),
+  intensity: z.enum(['Alta', 'Media', 'Baja', ""]).optional(),
   rest: z.number({
     invalid_type_error: 'Rest must be a number',
     required_error: 'Rest are required'
-  }).min(1, { message: "Rest must be at least 1" }).optional(),
+  }).min(0, { message: "Rest must be at least 1" }).optional(),
   note: z.string().optional()
 });
 
