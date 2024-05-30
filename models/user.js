@@ -47,14 +47,15 @@ export class UserModel {
   static async updateUser({ input }) {
     const {
       name,
-      user_id
+      id
     } = input
 
     try {
+      console.log('name: ' + name + ' user_id: ' + id)
       const [result] = await pool.query(
-        'UPDATE Users SET name = ? WHERE user_id = ?;',[name, user_id]
+        'UPDATE Users SET name = ? WHERE user_id = ?;',[name, id]
       )
-      return { message: 'User updated successfully' }
+      return { message: 'User updated successfully' , user: {"name": name, } }
     }catch (err) {
       return { error: "Error updating User"}
     }

@@ -72,13 +72,14 @@ export class UserController {
       return res.status(400).json({ error: JSON.parse(result.error.message)})
     }
 
+    console.log('Me llego: ' + req.user.id)
     const user = await this.userModel.updateUser({input: {...result.data, id: req.user.id}})
 
     if (user.error) {
       return res.status(404).json({ error: user.error })
     }
-
-    res.status(200).json({ message: "User updated"})
+    console.log(JSON.stringify(user))
+    res.status(200).json({ ...user})
   }
 
   getRoutineByDay = async (req, res) => {

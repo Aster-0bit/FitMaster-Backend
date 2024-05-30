@@ -14,7 +14,7 @@ export const verifyToken = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET)
-    console.log("decoded Token" + decoded.userId)
+    console.log("decoded userId" + decoded.id)
     req.user = { id: decoded.id }
     next()
   }catch(e) {
