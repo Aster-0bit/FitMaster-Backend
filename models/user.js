@@ -44,6 +44,22 @@ export class UserModel {
     }
   }
 
+  static async updateUser({ input }) {
+    const {
+      name,
+      user_id
+    } = input
+
+    try {
+      const [result] = await pool.query(
+        'UPDATE Users SET name = ? WHERE user_id = ?;',[name, user_id]
+      )
+      return { message: 'User updated successfully' }
+    }catch (err) {
+      return { error: "Error updating User"}
+    }
+  }
+
   static async findOne({ input }) {
     const {
       email,

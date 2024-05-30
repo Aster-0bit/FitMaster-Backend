@@ -1,4 +1,4 @@
-import { validateUser } from '../schemas/users.js'
+import { validateUser, validatePartialUser } from '../schemas/users.js'
 import { sendResetPasswordEmail } from '../middlewares/auth.js'
 import jwt from 'jsonwebtoken'
 
@@ -62,6 +62,23 @@ export class UserController {
 
       res.status(500).json({ error: "Internal Server Error. Please try again later." })
     }
+  }
+
+  updateUser = async (req, res) => {
+
+    const result = validatePartialUser(req.body)
+
+    if(!result.success) {
+      return res.status(400).json({ error: JSON.parse(result.error.message)})
+    }
+
+    const user = await this.userModel.updateUser({input: {...result.data, id: req.user.id}})
+
+    if (user.error) {
+      return res.status(404).json({ error: user.error })
+    }
+
+    res.status(200).json({ message: "User updated"})
   }
 
   getRoutineByDay = async (req, res) => {

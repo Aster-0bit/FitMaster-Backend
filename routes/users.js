@@ -9,6 +9,7 @@ export const createUserRouter = ({ userModel }) => {
 
   usersRouter.get('/users', userController.getAll)
   usersRouter.post('/', userController.create)
+  usersRouter.put('/update', verifyToken, userController.updateUser)
   usersRouter.get('/', verifyToken, userController.getUserByID)
 
   usersRouter.get('/favourites', verifyToken, userController.getFavoritesById)
