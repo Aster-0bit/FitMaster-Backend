@@ -149,6 +149,14 @@ export class ExerciseController {
     return res.status(201).json({"message": "Exercise1213 added succesfully", "results": results})
   }
 
+  getExercisesByIntensity = async (req, res) => {
+    const exercises = await this.exerciseModel.getExercisesByIntensity({ user_id: req.user.id, intensity: req.params.intensity });
+    if (!exercises) {
+      return res.status(404).json({ "message": "Exercises not found" });
+    }
+    res.json(exercises);
+  }
+
   getExerciseHistory = async (req, res) => {
     const exercises = await this.exerciseModel.getHistoryExercises({ user_id: req.user.id })
     if (!exercises) {

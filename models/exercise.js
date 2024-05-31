@@ -206,6 +206,23 @@ export class ExerciseModel {
     }
   }
 
+  static async getExercisesByIntenrity ({ user_id, intensity }) {
+    try{
+      const query = `
+        SELECT EC.exerciseP_id, E.name, EC.note, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
+        FROM ExercisesConfigurations EC
+        JOIN Exercises E ON EC.exercise_id = E.exercise_id
+        WHERE EC.user_id = ? AND EC.intensity = ?;
+      `
+      const[exercises] = await pool.query(query, [user_id, intensity])
+
+      return exercises
+    }catch (err) {
+      console.error(err)
+      return { message: "Error getting Exercise"}
+    }
+  }
+
   static async getRecentExercises ({ user_id }) {
     try{
       const query = `

@@ -15,6 +15,7 @@ export const createExerciseRouter = ({ exerciseModel }) => {
   exerciseRouter.get('/favourite', verifyToken, exerciseController.getFavourites)
   exerciseRouter.get('/history', verifyToken, exerciseController.getExerciseHistory)
   exerciseRouter.get('/:exerciseId', verifyToken, exerciseController.getExerciseById)
+  exerciseRouter.get('/intensity/:intesity', verifyToken, exerciseController.getExercisesByIntensity)
 
   exerciseRouter.post('/id/:exerciseId/day/:dayId', verifyToken, exerciseController.setExerciseToDay)
   exerciseRouter.post('/favourite/:exerciseId', verifyToken, exerciseController.setFavourite)
