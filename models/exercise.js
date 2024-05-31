@@ -192,21 +192,42 @@ export class ExerciseModel {
   static async getExerciseByRole ({ role_id, user_id }) {
     try{
       const query = `
-        SELECT EC.exerciseP_id, E.name, EC.note, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
-        FROM ExercisesConfigurations EC
-        JOIN Exercises E ON EC.exercise_id = E.exercise_id
-        WHERE EC.user_id = ? AND E.role = ?;
+        SELECT 
+          EC.exerciseP_id, 
+          E.name, 
+          EC.note, 
+          EC.reps, 
+          EC.sets, 
+          EC.weight, 
+          EC.rest, 
+          EC.duration, 
+          EC.intensity
+        FROM 
+          ExercisesConfigurations EC
+        JOIN 
+          Exercises E ON EC.exercise_id = E.exercise_id
+        WHERE 
+          EC.user_id = ? AND 
+          E.role = ? AND
+          EC.exerciseP_id IN (
+            SELECT MIN(subEC.exerciseP_id)
+            FROM ExercisesConfigurations subEC
+            JOIN Exercises subE ON subEC.exercise_id = subE.exercise_id
+            WHERE subEC.user_id = EC.user_id AND subE.role = E.role
+            GROUP BY subEC.exercise_id
+          );
       `
-      const[exercises] = await pool.query(query, [user_id, role_id])
-      if(exercises.length === 0){
-        return { error: "No exercises found"}
+      const [exercises] = await pool.query(query, [user_id, role_id])
+      if (exercises.length === 0) {
+        return { error: "No exercises found" }
       }
       return exercises
-    }catch (err) {
+    } catch (err) {
       console.error(err)
-      return { message: "Error getting Exercise"}
+      return { message: "Error getting Exercise" }
     }
   }
+
 
   static async getExercisesByIntensity ({ user_id, intensity }) {
     try{
