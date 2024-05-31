@@ -192,7 +192,7 @@ export class ExerciseModel {
   static async getExerciseByRole ({ role_id, user_id }) {
     try{
       const query = `
-        SELECT EC.exerciseP_id, E.name, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
+        SELECT EC.exerciseP_id, E.name, EC.note, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
         FROM ExercisesConfigurations EC
         JOIN Exercises E ON EC.exercise_id = E.exercise_id
         WHERE EC.user_id = ? AND E.role = ?;
@@ -217,7 +217,8 @@ export class ExerciseModel {
       EC.sets, 
       EC.weight, 
       EC.rest, 
-      EC.duration, 
+      EC.duration,
+      EC.note, 
       EC.intensity
       FROM 
           ExercisesConfigurations EC
@@ -255,7 +256,8 @@ export class ExerciseModel {
       EC.sets, 
       EC.weight, 
       EC.rest, 
-      EC.duration, 
+      EC.duration,
+      EC.note, 
       EC.intensity
       FROM 
           ExercisesConfigurations EC
@@ -312,7 +314,7 @@ export class ExerciseModel {
   static async getFavourites({ user_id }) {
     try{
       const query = `
-        SELECT EC.exerciseP_id, E.name, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
+        SELECT EC.exerciseP_id, E.name, EC.note, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
         FROM ExercisesConfigurations EC
         JOIN Exercises E ON EC.exercise_id = E.exercise_id
         JOIN Favourites F ON EC.exerciseP_id = F.exerciseP_id
