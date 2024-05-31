@@ -198,7 +198,9 @@ export class ExerciseModel {
         WHERE EC.user_id = ? AND E.role = ?;
       `
       const[exercises] = await pool.query(query, [user_id, role_id])
-
+      if(exercises.length === 0){
+        return { error: "No exercises found"}
+      }
       return exercises
     }catch (err) {
       console.error(err)
@@ -215,8 +217,7 @@ export class ExerciseModel {
         WHERE EC.user_id = ? AND EC.intensity = ?;
       `
       const[exercises] = await pool.query(query, [user_id, intensity])
-
-      return exercises
+      console.log(exercises)
     }catch (err) {
       console.error(err)
       return { message: "Error getting Exercise"}
@@ -292,7 +293,9 @@ export class ExerciseModel {
   
       `
       const [exercises] = await pool.query(query, [user_id, muscle_group_id])
-  
+      if(exercises.length === 0){ 
+        return { error: "No exercises found"}
+      }
       return exercises
     } catch (err) {
       console.error(err)
