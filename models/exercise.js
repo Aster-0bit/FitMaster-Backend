@@ -206,7 +206,7 @@ export class ExerciseModel {
     }
   }
 
-  static async getExercisesByIntenrity ({ user_id, intensity }) {
+  static async getExercisesByIntensity ({ user_id, intensity }) {
     try{
       const query = `
         SELECT EC.exerciseP_id, E.name, EC.note, EC.reps, EC.sets, EC.weight, EC.rest, EC.duration, EC.intensity
