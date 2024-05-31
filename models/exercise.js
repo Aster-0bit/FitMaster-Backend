@@ -249,7 +249,8 @@ export class ExerciseModel {
       const query = `
       SELECT 
       EC.exerciseP_id, 
-      E.name, 
+      E.name,
+      E.role, 
       EC.reps, 
       EC.sets, 
       EC.weight, 
