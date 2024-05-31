@@ -119,11 +119,13 @@ export class UserModel {
   }
 
   static async getUserById({ id }) {
-    const [user] = await pool.query('SELECT name, email FROM Users WHERE user_id = ?;',[id])
+    const [user] = await pool.query("SELECT name, email, TO_CHAR(created_at,'YYYY/MM/DD') AS date FROM Users WHERE user_id = ?;",[id])
+    const [favourites] = await pool.query('SELECT COUNT(*) AS Count FROM Favourites WHERE user_id = ?;',[id])
+    const [exercises] = await pool.query('SELECT COUNT(*) AS Count FROM ExercisesConfigurations WHERE user_id = ?;',[id])
 
     if (user.length === 0) return null
 
-    return user[0]
+    return {...user[0], "favs": favourites[0].Count, "excs":exercises[0].Count}
   }
 
   static async getFavoritesById({ id }) {
