@@ -17,15 +17,15 @@ const exerciseSchema = z.object({
   }).min(0, { message: "Sets must be at least 0" }).optional(),
   weight: z.number({
     invalid_type_error: 'Weight must be a number'
-  }).positive({ message: "Weight must be positive" }).optional(),
+  }).optional(),
   duration: z.number({
     invalid_type_error: 'Duration must be a number'
-  }).positive({ message: "Duration must be positive" }).optional(),
+  }).optional(),
   intensity: z.enum(['Alta', 'Media', 'Baja', ""]).optional(),
   rest: z.number({
     invalid_type_error: 'Rest must be a number',
     required_error: 'Rest is required'
-  }).positive({ message: "Rest must be positive" }).optional(),
+  }).optional(),
   note: z.string().optional()
 });
 
