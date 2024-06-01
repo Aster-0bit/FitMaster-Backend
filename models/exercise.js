@@ -157,37 +157,77 @@ export class ExerciseModel {
   }
 
   static async deleteExerciseFromDay({ exerciseP_id, day_id, user_id }) {
+    const connection = await pool.getConnection();
+  
     try {
-      const [result] = await pool.query(
+      await connection.beginTransaction();
+  
+      // Eliminar el ejercicio del día específico
+      await connection.query(
         'DELETE FROM ExercisesConfigurationsDays WHERE exerciseP_id = ? AND day_id = ? AND user_id = ?;',
         [exerciseP_id, day_id, user_id]
-      )
-      return { message: "Exercise deleted from specific day successfully" }
+      );
+  
+      // Comprobar si el ejercicio existe en otros días para el mismo usuario
+      const [remainingEntries] = await connection.query(
+        'SELECT COUNT(*) AS count FROM ExercisesConfigurationsDays WHERE exerciseP_id = ? AND user_id = ?;',
+        [exerciseP_id, user_id]
+      );
+  
+      // Si no existen otras entradas para este ejercicio, eliminar de la tabla de favoritos y de ExercisesConfigurations
+      if (remainingEntries[0].count === 0) {
+        await connection.query(
+          'DELETE FROM Favourites WHERE exerciseP_id = ? AND user_id = ?;',
+          [exerciseP_id, user_id]
+        );
+        await connection.query(
+          'DELETE FROM ExercisesConfigurations WHERE exerciseP_id = ? AND user_id = ?;',
+          [exerciseP_id, user_id]
+        );
+      }
+  
+      await connection.commit();
+      return { message: 'Exercise deleted from specific day successfully' };
     } catch (err) {
-      console.error(err)
-      return { message: "Error deleting Exercise from day" }
+      await connection.rollback();
+      console.error(err);
+      return { message: 'Error deleting Exercise from day', error: err };
     }
   }
 
   static async deleteExerciseFromAllDays({ exerciseP_id, user_id }) {
+    const connection = await pool.getConnection();
+  
     try {
-      await pool.query('START TRANSACTION')
-      await pool.query(
+      await connection.beginTransaction();
+  
+      // Eliminar el ejercicio de todos los días
+      await connection.query(
         'DELETE FROM ExercisesConfigurationsDays WHERE exerciseP_id = ? AND user_id = ?;',
         [exerciseP_id, user_id]
-      )
-      await pool.query(
+      );
+  
+      // Eliminar el ejercicio de la tabla de favoritos
+      await connection.query(
+        'DELETE FROM Favourites WHERE exerciseP_id = ? AND user_id = ?;',
+        [exerciseP_id, user_id]
+      );
+  
+      // Eliminar el ejercicio de ExercisesConfigurations
+      await connection.query(
         'DELETE FROM ExercisesConfigurations WHERE exerciseP_id = ? AND user_id = ?;',
         [exerciseP_id, user_id]
-      )
-      await pool.query('COMMIT')
-      return { message: "Exercise deleted from all days successfully" }
+      );
+  
+      await connection.commit();
+      return { message: 'Exercise deleted from all days successfully' };
     } catch (err) {
-      console.error(err)
-      await pool.query('ROLLBACK')
-      return { message: "Error deleting Exercise from all days" }
+      await connection.rollback();
+      console.error(err);
+      return { message: 'Error deleting Exercise from all days', error: err };
     }
   }
+  
 
   static async getExerciseByRole ({ role_id, user_id }) {
     try{

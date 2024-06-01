@@ -54,23 +54,30 @@ export class ExerciseController {
 
   deleteExerciseFromDay = async (req, res) => {
     try {
-      const deletedExercise = await this.exerciseModel.deleteExerciseFromDay({ exerciseP_id: req.params.exerciseId, day_id: req.params.dayId, user_id: req.user.id})
-      res.json(deletedExercise)
-    }catch(err){
-      console.error("Error deleting exercise:", e);
-      res.status(500).json({ error: "Internal Server Error. Please try again later." })
+      const deletedExercise = await this.exerciseModel.deleteExerciseFromDay({
+        exerciseP_id: req.params.exerciseId,
+        day_id: req.params.dayId,
+        user_id: req.user.id
+      });
+      res.json(deletedExercise);
+    } catch (err) {
+      console.error('Error deleting exercise:', err);
+      res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
     }
-  }
+  };
 
   deleteExerciseFromAllDays = async (req, res) => {
     try {
-      const deletedExercise = await this.exerciseModel.deleteExerciseFromAllDays({ exerciseP_id: req.params.exerciseId, user_id: req.user.id})
-      res.json(deletedExercise)
-    }catch(err){
-      console.error("Error deleting exercise:", e);
-      res.status(500).json({ error: "Internal Server Error. Please try again later." })
+      const deletedExercise = await this.exerciseModel.deleteExerciseFromAllDays({
+        exerciseP_id: req.params.exerciseId,
+        user_id: req.user.id
+      });
+      res.json(deletedExercise);
+    } catch (err) {
+      console.error('Error deleting exercise:', err);
+      res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
     }
-  }
+  };
 
   getExerciseByRole = async (req, res) => {
     const exercises = await this.exerciseModel.getExerciseByRole({role_id: req.params.role, user_id: req.user.id})

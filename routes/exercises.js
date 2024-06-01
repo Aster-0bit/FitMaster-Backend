@@ -23,8 +23,8 @@ export const createExerciseRouter = ({ exerciseModel }) => {
   exerciseRouter.delete('/favourite/:exerciseId', verifyToken, exerciseController.deleteFavourite)
   exerciseRouter.post('/', verifyToken, exerciseController.createExercise)
   exerciseRouter.put('/:exerciseId', verifyToken, exerciseController.updateExercise)
-  exerciseRouter.delete('/:exerciseId/day/:dayId', verifyToken, exerciseController.deleteExerciseFromDay)
-  exerciseRouter.delete('/:exerciseId', verifyToken, exerciseController.deleteExerciseFromAllDays)
+  exerciseRouter.delete('/id/:exerciseId/day/:dayId', verifyToken, exerciseController.deleteExerciseFromDay);
+  exerciseRouter.delete('/id/:exerciseId/all-days', verifyToken, exerciseController.deleteExerciseFromAllDays);
   exerciseRouter.post('/exercises-with-days', verifyToken, exerciseController.createExerciseWithDays);
   exerciseRouter.get('/routine/all', verifyToken, exerciseController.getRoutineForAllDays);
   return exerciseRouter
