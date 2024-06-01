@@ -40,7 +40,7 @@ export class UserModel {
       const userId = result.insertId;  
       return { message: 'User created successfully' };
     }catch (e) {
-      throw e
+      console.log(e)
     }
   }
 

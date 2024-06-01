@@ -369,6 +369,89 @@ export class ExerciseModel {
     }
   }
 
+  static async createExerciseWithDays({ input }) {
+    const {
+      exercise_id,
+      user_id,
+      reps,
+      sets,
+      weight,
+      rest,
+      duration,
+      intensity,
+      note,
+      days // Esto es un array de ids de días
+    } = input
+  
+    const connection = await pool.getConnection();
+    try {
+      await connection.beginTransaction();
+  
+      // Insertar el ejercicio en ExercisesConfigurations
+      const [result] = await connection.query(
+        'INSERT INTO ExercisesConfigurations (exercise_id, user_id, reps, sets, weight, rest, duration, intensity, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
+        [exercise_id, user_id, reps, sets, weight, rest, duration, intensity, note]
+      );
+  
+      const exerciseP_id = result.insertId;
+  
+      // Insertar el ejercicio en ExercisesConfigurationsDays para cada día
+      const insertPromises = days.map(day_id => 
+        connection.query(
+          'INSERT INTO ExercisesConfigurationsDays (exerciseP_id, day_id, user_id) VALUES (?, ?, ?);',
+          [exerciseP_id, day_id, user_id]
+        )
+      );
+  
+      await Promise.all(insertPromises);
+      
+      await connection.commit();
+  
+      return { message: 'Custom Exercise created and added to days successfully', id: exerciseP_id };
+    } catch (err) {
+      await connection.rollback();
+      throw { message: "Error creating Exercise with days" }
+    }
+  }
+  
+  static async getRoutineForAllDays({ user_id }) {
+    const query = `
+    SELECT 
+        Ex.name AS Exercise_Name,
+        ExC.note AS Note,
+        ExC.exerciseP_id AS ExerciseP_id,
+        ExC.reps AS Repetitions,
+        ExC.sets AS Sets,
+        ExC.weight AS Weight,
+        ExC.rest AS Rest,
+        ExC.duration AS Duration,
+        ExC.intensity AS Intensity,
+        D.name AS Day_Name,
+        IF(Fav.exerciseP_id IS NOT NULL, TRUE, FALSE) AS Is_Favorite
+    FROM 
+        ExercisesConfigurationsDays ExCD
+    LEFT JOIN 
+        ExercisesConfigurations ExC ON ExCD.exerciseP_id = ExC.exerciseP_id
+    LEFT JOIN 
+        Exercises Ex ON ExC.exercise_id = Ex.exercise_id
+    LEFT JOIN 
+        Days D ON ExCD.day_id = D.day_id
+    LEFT JOIN 
+        Favourites Fav ON ExCD.exerciseP_id = Fav.exerciseP_id AND Fav.user_id = ?
+    WHERE 
+        ExCD.user_id = ?;
+    `;
+    try {
+      const [routine] = await pool.query(query, [user_id, user_id]);
+      console.log('Rutina de todos los días:\n', routine);
+      return routine;
+    } catch (err) {
+      console.error('Error getting the routine for all days', err);
+      throw err;
+    }
+  }
+  
+
   static async setExerciseToDay({ input }) {
     
     try {

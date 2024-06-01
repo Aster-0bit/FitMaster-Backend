@@ -89,6 +89,32 @@ export class ExerciseController {
     res.json(exercises)
   }
 
+  createExerciseWithDays = async (req, res) => {
+    const result = validateExercise({ ...req.body, user_id: req.user.id })
+
+    if (!result.success) {
+      return res.status(400).json({ error: JSON.parse(result.error.message) })
+    }
+
+    try {
+      const newExercise = await this.exerciseModel.createExerciseWithDays({ input: { ...result.data, user_id: req.user.id } })
+      res.status(201).json(newExercise)
+    } catch (err) {
+      console.error("Error creating exercise with days:", err)
+      res.status(500).json({ error: "Internal Server Error. Please try again later." })
+    }
+  }
+
+  getRoutineForAllDays = async (req, res) => {
+    try {
+      const routine = await this.exerciseModel.getRoutineForAllDays({ user_id: req.user.id });
+      res.json(routine);
+    } catch (err) {
+      console.error('Error getting routine for all days:', err);
+      res.status(500).json({ error: 'Internal Server Error. Please try again later.' });
+    }
+  };
+
   getExercisesByMuscleGroup = async (req, res) => {
     const exercises = await this.exerciseModel.getExercisesByMuscleGroup({ user_id: req.user.id, muscle_group_id: req.params.muscleGroupId });
     if (exercises.error) {

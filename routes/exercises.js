@@ -7,6 +7,7 @@ export const createExerciseRouter = ({ exerciseModel }) => {
 
   const exerciseController = new ExerciseController({ exerciseModel })
 
+
   exerciseRouter.post('/add/history', verifyToken, exerciseController.setExerciseHistory)
   exerciseRouter.get('/', exerciseController.getAllExercises)
   exerciseRouter.get('/role/:role', verifyToken, exerciseController.getExerciseByRole)
@@ -24,6 +25,7 @@ export const createExerciseRouter = ({ exerciseModel }) => {
   exerciseRouter.put('/:exerciseId', verifyToken, exerciseController.updateExercise)
   exerciseRouter.delete('/:exerciseId/day/:dayId', verifyToken, exerciseController.deleteExerciseFromDay)
   exerciseRouter.delete('/:exerciseId', verifyToken, exerciseController.deleteExerciseFromAllDays)
-
+  exerciseRouter.post('/exercises-with-days', verifyToken, exerciseController.createExerciseWithDays);
+  exerciseRouter.get('/routine/all', verifyToken, exerciseController.getRoutineForAllDays);
   return exerciseRouter
 }

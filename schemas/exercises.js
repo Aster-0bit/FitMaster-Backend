@@ -26,7 +26,10 @@ const exerciseSchema = z.object({
     invalid_type_error: 'Rest must be a number',
     required_error: 'Rest is required'
   }).optional(),
-  note: z.string().optional()
+  note: z.string().optional(),
+  days: z.array(z.number({
+    invalid_type_error: 'Day ID must be a number'
+  })).min(1, { message: 'At least one day is required' }) // Agregado el campo days
 });
 
 export function validateExercise(input) {
