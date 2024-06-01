@@ -141,14 +141,20 @@ export class ExerciseController {
   }
 
   deleteFavourite = async (req, res) => {
-    const results = await this.exerciseModel.deleteFavourite({ user_id: req.user.id, exerciseP_id: req.params.exerciseId})
-
-    if(!results) {
-      return res.status(404).json({ "message": "can't delete favourite" });
+    try {
+      const results = await this.exerciseModel.deleteFavourite({ user_id: req.user.id, exerciseP_id: req.params.exerciseId });
+  
+      if (!results.affectedRows) {  // Verificar si alguna fila fue afectada
+        return res.status(404).json({ "message": "can't delete favourite" });
+      }
+  
+      return res.status(200).json({ "message": "Favourite deleted successfully" });
+    } catch (err) {
+      console.error("Error deleting favourite:", err);
+      return res.status(500).json({ "message": "Internal Server Error" });
     }
-    
-    return res.status(201).json({"message": "Favourite deleted successfully"})
   }
+  
 
   getFavourites = async (req, res) => {
     const exercises = await this.exerciseModel.getFavourites({ user_id: req.user.id })

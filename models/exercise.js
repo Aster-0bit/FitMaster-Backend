@@ -388,20 +388,23 @@ static async getExercisesByMuscleGroup({ user_id, muscle_group_id }) {
     }
   }
 
-  static async deleteFavourite({ user_id, exerciseP_id}) {
+  static async deleteFavourite({ user_id, exerciseP_id }) {
     try {
       const query = `
         DELETE 
         FROM Favourites 
         WHERE user_id = ? AND
         exerciseP_id = ? 
-      `
-
-      const[results] = await pool.query(query, [user_id, exerciseP_id])
-    }catch (err) {
-      console.log(err)
+      `;
+  
+      const [results] = await pool.query(query, [user_id, exerciseP_id]);
+      return results;  // Asegúrate de retornar los resultados
+    } catch (err) {
+      console.log(err);
+      throw err;  // Lanzar el error para que pueda ser capturado por el controlador
     }
   }
+  
 
   static async getFavourites({ user_id }) {
     try {
